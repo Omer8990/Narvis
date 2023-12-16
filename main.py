@@ -1,12 +1,27 @@
-import os
+from conf import get_model_config
+from conf.setup import INIT_PROMPT
 
-import google.generativeai as genai
+chat = get_model_config().start_chat()
+response = chat.send_message(INIT_PROMPT)
+print(response.text)
 
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
-model = genai.GenerativeModel('gemini-pro')
+def ask_question(prompt: str):
+    response = chat.send_message(prompt)
+    print(response.text)
 
-chat = model.start_chat()
-response = chat.send_message('Hello, what should I have for dinner?')
-print(response.text)  # 'Here are some suggestions...'
-response = chat.send_message("How do I cook the first one?")
+
+def main():
+    while True:
+        user_input = input()
+
+        if user_input.lower() == "stop":
+            print("Existing NARVIS..")
+            break
+
+        # Do something with the input
+        ask_question(user_input)
+
+
+if __name__ == '__main__':
+    main()
